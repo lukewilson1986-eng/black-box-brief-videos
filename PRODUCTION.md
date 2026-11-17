@@ -10,7 +10,8 @@ Read this in full before making an episode. Follow it exactly. Luke does not rev
 
 ## Schedule
 - One full episode every TWO weeks, live **Monday 19:00 Europe/London**.
-- Three Shorts cut from each episode, public **Wednesday, Friday and Sunday 18:00** after the episode.
+- Four Shorts cut from each episode, all public at **18:00**: Shorts 1–3 on the **Tuesday, Wednesday and Thursday** straight after the episode (to push it while it's fresh), Short 4 on the **Tuesday of the following week** (the quiet week, so the channel never goes more than about 6 days without a post).
+- Cycle: Sunday – make episode + 4 Shorts and schedule them; Monday 19:00 – episode live; Tue/Wed/Thu 18:00 – Shorts 1–3; next Tue 18:00 – Short 4; following Sunday – make the next episode.
 - Episode log: `episodes.md` (newest at bottom). Never repeat an incident already in the log.
 
 ## Episode spec
@@ -35,7 +36,7 @@ Read this in full before making an episode. Follow it exactly. Luke does not rev
 - Getting the audio into the workspace: get each take's `full_res_url` via `creative_get_generations` and `curl` it. If the workspace can't reach elevenlabsusercontent.com (network blocked), and Luke's computer is reachable via the `mcp__remote-devices__device_bash` tool, download it there into `~/Downloads/bbb_work/` and stage it in with `device_stage_files`. If neither works, stop and notify Luke that network access needs "All domains" in Claude settings.
 
 ## Shorts
-- Three vertical 1080x1920 Shorts per episode, each 35–55 s, cut from the finished episode's strongest moments (cold open, the critical moment, the cause). They reuse the narration, so they cost no credits.
+- Four vertical 1080x1920 Shorts per episode, each 35–55 s, cut from the finished episode's strongest moments (cold open, the critical moment, the cause, plus one more – e.g. what changed afterwards or a striking detail from the investigation). Each Short must use different footage from the others. They reuse the narration, so they cost no credits.
 - Layout (as Episode 1): dark gridded background, "THE BLACK BOX BRIEF" in orange mono at the top, a 2–3 line bold headline (last line orange), the 16:9 clip in the middle framed by thin orange bars, and a "Full investigation on the channel" banner with the logo below.
 - Title: short punchy hook + ` #shorts`. Description: one or two sentences + `Watch the full investigation: https://youtu.be/<episode id>` + hashtags.
 
@@ -45,8 +46,9 @@ Read this in full before making an episode. Follow it exactly. Luke does not rev
 3. Schedule with Metricool (`createScheduledPost`), brand/blogId `8132607`, timezone Europe/London, network `youtube`:
    - Episode: `type: "video"`, `privacy: "public"`, title, full description (summary, chapters with timestamps, sources section naming the official report), tags, `category: "EDUCATION"`, `madeForKids: false`, `videoThumbnailUrl` = the thumbnail's raw link (1280x720 JPG).
    - Shorts: `type: "short"`, same settings, no thumbnail.
-4. The Shorts must link to the episode, but its YouTube ID only exists once Metricool uploads it (at 19:00 Monday). So: schedule the episode first; then schedule the Shorts with `https://www.youtube.com/@BlackBoxBriefAviation` as a placeholder link, and mark the row in `episodes.md` with `SHORTS LINK PENDING`. A separate Monday-evening scheduled task finds the new video's ID (WebFetch `https://www.youtube.com/@BlackBoxBriefAviation/videos`, or the built-in browser on YouTube Studio if Luke's computer is reachable), replaces the placeholder in each pending Short with `https://youtu.be/<id>` using `updateScheduledPost`, records the ID in `episodes.md`, and removes the PENDING mark.
-5. Confirm with `getScheduledPosts` that all four posts are queued.
+4. The Shorts must link to the episode, but its YouTube ID only exists once Metricool uploads it (at 19:00 Monday). So: schedule the episode first; then schedule the four Shorts with `https://www.youtube.com/@BlackBoxBriefAviation` as a placeholder link, and mark the row in `episodes.md` with `SHORTS LINK PENDING`. A separate Monday-evening scheduled task finds the new video's ID (WebFetch `https://www.youtube.com/@BlackBoxBriefAviation/videos`, or the built-in browser on YouTube Studio if Luke's computer is reachable), replaces the placeholder in each of the four pending Shorts with `https://youtu.be/<id>` using `updateScheduledPost`, records the ID in `episodes.md`, and removes the PENDING mark.
+5. Confirm with `getScheduledPosts` that all five posts (episode + 4 Shorts) are queued.
+6. YouTube's API can't set a Short's "Related video" link (the tappable link to the full episode), so neither Metricool nor these runs can. Links in Shorts descriptions aren't clickable. Until there's an automated route, Luke sets Related video in YouTube Studio after each Short publishes.
 
 ## Thumbnail
 - 1280x720 JPG under 2 MB. Dark brand background, a bold 2–4 word hook in white/orange, a clear graphic of the aircraft or the key part, small logo. Readable at phone size.
@@ -59,4 +61,4 @@ Read this in full before making an episode. Follow it exactly. Luke does not rev
 
 ## After scheduling
 - Append the episode to `episodes.md` (number, incident, report, live date, file paths, Metricool post IDs) and commit.
-- Send Luke a short summary (push notification): episode title, air date, the three Shorts, credits left.
+- Send Luke a short summary (push notification): episode title, air date, the four Shorts with dates, credits left.
